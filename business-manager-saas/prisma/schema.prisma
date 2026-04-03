@@ -24,6 +24,21 @@ enum EntryType {
   EXPENSE
 }
 
+enum NotificationType {
+  APPOINTMENT_REMINDER
+  APPOINTMENT_CONFIRMATION
+  APPOINTMENT_CANCELLATION
+  FINANCIAL_ALERT
+  MARKETING
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  READ
+}
+
 model Tenant {
   id                String             @id @default(uuid())
   name              String
@@ -32,6 +47,7 @@ model Tenant {
   customers         Customer[]
   appointments      Appointment[]
   financialEntries  FinancialEntry[]
+  notifications     Notification[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 }
@@ -51,16 +67,17 @@ model User {
 }
 
 model Customer {
-  id           String        @id @default(uuid())
-  tenantId     String
-  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  name         String
-  phone        String?
-  email        String?
-  notes        String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  appointments Appointment[]
+  id            String          @id @default(uuid())
+  tenantId      String
+  tenant        Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name          String
+  phone         String?
+  email         String?
+  notes         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  appointments  Appointment[]
+  notifications Notification[]
 }
 
 model Appointment {
@@ -98,4 +115,28 @@ model FinancialEntry {
 
   @@index([tenantId])
   @@index([date])
+}
+
+model Notification {
+  id           String             @id @default(uuid())
+  tenantId     String
+  tenant       Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customerId   String?
+  customer     Customer?          @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  type         NotificationType
+  channel      String             @default("email")
+  recipient    String
+  subject      String?
+  content      String
+  status       NotificationStatus @default(PENDING)
+  sentAt       DateTime?
+  error        String?
+  scheduledFor DateTime?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@index([tenantId])
+  @@index([customerId])
+  @@index([status])
+  @@index([scheduledFor])
 }
