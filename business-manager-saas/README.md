@@ -1,11 +1,12 @@
-﻿# Business Manager SaaS
+# Business Manager SaaS
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-01696f)
 ![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?logo=nodedotjs&logoColor=white)
-![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=0b0f19)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?logo=postgresql&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens&logoColor=white)
+![Express](https://img.shields.io/badge/Express-Framework-000000?logo=express&logoColor=white)
 
 Plataforma SaaS **multi-tenant** para gestão de pequenos negócios, como barbearias, profissionais autônomos e serviços locais.
 
@@ -35,41 +36,50 @@ Pequenos negócios costumam enfrentar dificuldades como:
 - Pouca visibilidade sobre faturamento e desempenho
 - Ausência de uma gestão centralizada
 
-## Solução
+## Funcionalidades Implementadas
 
-A plataforma reúne os principais recursos operacionais em um único ambiente:
+### Autenticação e Autorização
+- Registro e login de usuários
+- Autenticação JWT com refresh token
+- Sistema RBAC (Role-Based Access Control)
+- Perfis: Admin e Staff
 
-- Agendamentos
-- Gestão de clientes
-- Controle financeiro
-- Dashboard com visão gerencial
-- Estrutura SaaS para múltiplos tenants
-
-## Funcionalidades
+### Gestão de Clientes
+- CRUD completo de clientes
+- Busca com filtros por nome, email e telefone
+- Paginação de resultados
 
 ### Agendamentos
-- Cadastro e gerenciamento de horários
-- Organização da rotina de atendimento
-- Controle de serviços agendados
+- CRUD completo de agendamentos
+- Status: SCHEDULED, CONFIRMED, COMPLETED, CANCELLED
+- Associação com clientes
+- Controle de data e hora
 
-### Gestão de clientes
-- Cadastro de clientes
-- Histórico de relacionamento
-- Centralização das informações do atendimento
-
-### Controle financeiro
+### Controle Financeiro
 - Registro de entradas e saídas
-- Acompanhamento financeiro do negócio
-- Base para relatórios e indicadores
+- Categorização por tipo (INCOME, EXPENSE)
+- Resumo financeiro (total receitas, despesas, saldo)
+- Filtros por período
 
 ### Dashboard
-- Visualização resumida da operação
-- Indicadores principais do negócio
-- Apoio à tomada de decisão
+- Visão geral da operação
+- Total de clientes, agendamentos e movimentações
+- Resumo financeiro rápido
+
+### Relatórios
+- Relatório financeiro por período
+- Relatório de agendamentos
+- Comparativo de entradas vs saídas
+
+### Notificações
+- Sistema de notificações multi-canal
+- Tipos: lembretes, confirmações, cancelamentos, alertas financeiros, marketing
+- Status: PENDING, SENT, FAILED, READ
+- Agendamento de envio
 
 ## Diferencial técnico
 
-O principal diferencial deste projeto é sua arquitetura **multi-tenant**, um padrão comum em SaaS para suportar múltiplos clientes em uma única aplicação com isolamento por tenant e autenticação escopada ao contexto da empresa [web:6][web:17].
+O principal diferencial deste projeto é sua arquitetura **multi-tenant**, um padrão comum em SaaS para suportar múltiplos clientes em uma única aplicação com isolamento por tenant e autenticação escopada ao contexto da empresa.
 
 Na prática, isso permite:
 
@@ -78,78 +88,158 @@ Na prática, isso permite:
 - Organização mais clara da camada de autenticação e autorização
 - Estrutura preparada para evolução comercial como SaaS
 
-## Stack utilizada
+## Stack tecnológica
 
-- **Node.js** — backend e regras de negócio
-- **React** — interface do usuário
-- **PostgreSQL** — banco de dados relacional
-- **Prisma** — ORM e modelagem de dados
-- **JWT** — autenticação
+| Tecnologia | Uso |
+|------------|-----|
+| **Node.js** | Runtime |
+| **Express** | Framework web |
+| **TypeScript** | Linguagem |
+| **Prisma** | ORM |
+| **PostgreSQL** | Banco de dados |
+| **JWT** | Autenticação |
+| **Zod** | Validação |
+| **bcrypt** | Hash de senhas |
 
 ## Arquitetura
 
-Estrutura conceitual do projeto:
+```
+├── src/
+│   ├── app.ts              # Configuração Express
+│   ├── server.ts           # Entry point
+│   ├── config/             # Configurações
+│   ├── lib/                 # Bibliotecas (Prisma)
+│   ├── middlewares/         # Middlewares (auth, validation, etc)
+│   ├── modules/            # Módulos da aplicação
+│   │   ├── auth/
+│   │   ├── customers/
+│   │   ├── appointments/
+│   │   ├── financial/
+│   │   ├── dashboard/
+│   │   ├── reports/
+│   │   └── notifications/
+│   ├── routes/              # Rotas
+│   └── shared/             # Compartilhado
+├── prisma/
+│   └── schema.prisma        # Schema do banco
+└── dist/                    # Compilação
+```
 
-- Aplicação web com frontend separado do backend
-- API responsável pelas regras de negócio e autenticação
-- Banco relacional com modelagem orientada a tenants
-- Recursos vinculados ao contexto da empresa autenticada
-- Isolamento lógico de dados com base em `tenant_id`
+## API Endpoints
 
-Exemplos de entidades previstas:
+### Autenticação
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/auth/register` | Registrar usuário |
+| POST | `/auth/login` | Login |
 
-- `Tenant`
-- `User`
-- `Customer`
-- `Appointment`
-- `FinancialEntry`
+### Clientes
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/customers` | Listar clientes |
+| GET | `/customers/:id` | Detalhes do cliente |
+| POST | `/customers` | Criar cliente |
+| PATCH | `/customers/:id` | Atualizar cliente |
+| DELETE | `/customers/:id` | Excluir cliente |
+
+### Agendamentos
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/appointments` | Listar agendamentos |
+| GET | `/appointments/:id` | Detalhes do agendamento |
+| POST | `/appointments` | Criar agendamento |
+| PATCH | `/appointments/:id` | Atualizar agendamento |
+| DELETE | `/appointments/:id` | Excluir agendamento |
+
+### Financeiro
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/financial` | Listar lançamentos |
+| GET | `/financial/summary` | Resumo financeiro |
+| GET | `/financial/:id` | Detalhes do lançamento |
+| POST | `/financial` | Criar lançamento |
+| PATCH | `/financial/:id` | Atualizar lançamento |
+| DELETE | `/financial/:id` | Excluir lançamento |
+
+### Dashboard
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/dashboard` | Visão geral |
+
+### Relatórios
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/reports/financial` | Relatório financeiro |
+| GET | `/reports/appointments` | Relatório de agendamentos |
+| GET | `/reports/comparison` | Comparativo |
+
+### Notificações
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/notifications` | Listar notificações |
+| GET | `/notifications/:id` | Detalhes da notificação |
+| POST | `/notifications` | Criar notificação |
+| PATCH | `/notifications/:id` | Atualizar notificação |
+| DELETE | `/notifications/:id` | Excluir notificação |
+| POST | `/notifications/:id/send` | Enviar notificação |
+| POST | `/notifications/:id/read` | Marcar como lida |
+
+### Sistema
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/health` | Health check |
 
 ## Fluxo principal
 
-1. O usuário autentica na plataforma
+1. O usuário registra/autentica na plataforma
 2. O sistema identifica o tenant vinculado
 3. Os dados exibidos são filtrados pelo contexto da empresa
 4. O usuário gerencia clientes, agenda, finanças e indicadores dentro do seu espaço
 
 ## Status do projeto
 
-🚧 Em desenvolvimento
+🚧 **MVP Completo** - Backend funcional com todos os módulos principais
 
-Módulos em evolução:
+Módulos implementados:
 
-- Estrutura inicial do backend
-- Modelagem de banco de dados
-- Autenticação
-- Recursos operacionais
-- Dashboard
+- [x] Estrutura inicial do backend
+- [x] Modelagem de banco de dados
+- [x] Autenticação JWT
+- [x] Controle de permissões (RBAC)
+- [x] Gestão de clientes
+- [x] Agendamentos
+- [x] Lançamentos financeiros
+- [x] Dashboard
+- [x] Relatórios
+- [x] Sistema de notificações
 
 ## Roadmap
 
-### MVP
-- [ ] Autenticação com JWT
-- [ ] Cadastro de tenants
-- [ ] Cadastro de usuários
-- [ ] Cadastro de clientes
-- [ ] Agendamentos
-- [ ] Lançamentos financeiros
-- [ ] Dashboard inicial
+### Em desenvolvimento
+- [ ] Frontend React
+- [ ] Testes unitários
 
 ### Próximas evoluções
-- [ ] Controle de permissões por perfil
-- [ ] Notificações e lembretes
-- [ ] Relatórios financeiros
-- [ ] Métricas por período
+- [ ] Métricas avançadas por período
 - [ ] Multi-unidade
-- [ ] Integração com pagamentos
+- [ ] Integração com pagamentos (Stripe, PagSeguro)
+- [ ] Envio real de notificações (email, SMS)
 - [ ] Deploy SaaS com onboarding
+- [ ] Aplicativo mobile
 
 ## Como rodar localmente
 
-> Ajuste os comandos conforme a estrutura atual do seu projeto.
+### Pré-requisitos
+
+- Node.js 18+
+- PostgreSQL 14+
+- npm ou yarn
+
+### Instalação
 
 ```bash
 # Clone o repositório
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/RFernandes10/Business-Manager-SaaS-.git
 
 # Acesse a pasta
 cd business-manager-saas
@@ -159,9 +249,34 @@ npm install
 
 # Configure as variáveis de ambiente
 cp .env.example .env
+# Edite o .env com suas configurações
 
 # Execute as migrations
 npx prisma migrate dev
 
-# Inicie o projeto
+# Gere o cliente Prisma
+npx prisma generate
+
+# Inicie o projeto em modo desenvolvimento
 npm run dev
+
+# Ou para produção
+npm run build
+npm start
+```
+
+### Variáveis de ambiente
+
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/business_manager
+JWT_SECRET=your-secret-key
+PORT=3000
+```
+
+## Autor
+
+[Roberto Fernandes](https://github.com/RFernandes10)
+
+## Licença
+
+MIT License
