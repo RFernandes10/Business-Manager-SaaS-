@@ -6,6 +6,7 @@ import { appointmentRoutes } from "../modules/appointments/appointment.routes";
 import { financialRoutes } from "../modules/financial/financial.routes";
 import { dashboardRoutes } from "../modules/dashboard/dashboard.routes";
 import { reportsRoutes } from "../modules/reports/reports.routes";
+import { notificationRoutes } from "../modules/notifications/notification.routes";
 
 export const routes = Router();
 
@@ -16,3 +17,4 @@ routes.use("/appointments", appointmentRoutes);
 routes.use("/financial", financialRoutes);
 routes.use("/dashboard", dashboardRoutes);
 routes.use("/reports", reportsRoutes);
+routes.use("/notifications", notificationRoutes);

@@ -12,6 +12,9 @@ export enum Permission {
   USERS_WRITE = "users:write",
   USERS_DELETE = "users:delete",
   DASHBOARD_READ = "dashboard:read",
+  NOTIFICATIONS_READ = "notifications:read",
+  NOTIFICATIONS_WRITE = "notifications:write",
+  NOTIFICATIONS_DELETE = "notifications:delete",
 }
 
 export const RolePermissions: Record<string, Permission[]> = {
@@ -29,6 +32,9 @@ export const RolePermissions: Record<string, Permission[]> = {
     Permission.USERS_WRITE,
     Permission.USERS_DELETE,
     Permission.DASHBOARD_READ,
+    Permission.NOTIFICATIONS_READ,
+    Permission.NOTIFICATIONS_WRITE,
+    Permission.NOTIFICATIONS_DELETE,
   ],
   STAFF: [
     Permission.CUSTOMERS_READ,
@@ -36,5 +42,7 @@ export const RolePermissions: Record<string, Permission[]> = {
     Permission.APPOINTMENTS_READ,
     Permission.APPOINTMENTS_WRITE,
     Permission.DASHBOARD_READ,
+    Permission.NOTIFICATIONS_READ,
+    Permission.NOTIFICATIONS_WRITE,
   ],
 };
