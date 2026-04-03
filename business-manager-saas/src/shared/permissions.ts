@@ -1,0 +1,40 @@
+export enum Permission {
+  CUSTOMERS_READ = "customers:read",
+  CUSTOMERS_WRITE = "customers:write",
+  CUSTOMERS_DELETE = "customers:delete",
+  APPOINTMENTS_READ = "appointments:read",
+  APPOINTMENTS_WRITE = "appointments:write",
+  APPOINTMENTS_DELETE = "appointments:delete",
+  FINANCIAL_READ = "financial:read",
+  FINANCIAL_WRITE = "financial:write",
+  FINANCIAL_DELETE = "financial:delete",
+  USERS_READ = "users:read",
+  USERS_WRITE = "users:write",
+  USERS_DELETE = "users:delete",
+  DASHBOARD_READ = "dashboard:read",
+}
+
+export const RolePermissions: Record<string, Permission[]> = {
+  ADMIN: [
+    Permission.CUSTOMERS_READ,
+    Permission.CUSTOMERS_WRITE,
+    Permission.CUSTOMERS_DELETE,
+    Permission.APPOINTMENTS_READ,
+    Permission.APPOINTMENTS_WRITE,
+    Permission.APPOINTMENTS_DELETE,
+    Permission.FINANCIAL_READ,
+    Permission.FINANCIAL_WRITE,
+    Permission.FINANCIAL_DELETE,
+    Permission.USERS_READ,
+    Permission.USERS_WRITE,
+    Permission.USERS_DELETE,
+    Permission.DASHBOARD_READ,
+  ],
+  STAFF: [
+    Permission.CUSTOMERS_READ,
+    Permission.CUSTOMERS_WRITE,
+    Permission.APPOINTMENTS_READ,
+    Permission.APPOINTMENTS_WRITE,
+    Permission.DASHBOARD_READ,
+  ],
+};
